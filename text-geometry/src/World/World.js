@@ -43,14 +43,19 @@ class World {
 
   async init() {
     const { parrot } = await loadBirds();
-    const { text } = await loadTexts();
+    const { flows, lines } = await loadTexts();
 
     controls.target.copy(parrot.position);
     loop.updatables.push(parrot);
     scene.add(parrot);
 
-    loop.updatables.push(text);
-    scene.add(text);
+    for (let i in flows) {
+      scene.add(flows[i].object3D);
+      loop.updatables.push(flows[i]);
+    }
+    for (let i in lines) {
+      scene.add(lines[i]);
+    }
   }
 
   render() {
