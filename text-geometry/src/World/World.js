@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import { loadBirds } from './components/birds/birds.js';
 import { createCamera } from './components/camera.js';
 import { createLights } from './components/lights.js';
 import { createScene } from './components/scene.js';
@@ -19,7 +18,7 @@ let loop;
 
 /** TODO
  * - Add debug ui
- * - Replace the parrot model
+ * - Make the head model better
  * - Make the curvature smooth
  */
 class World {
@@ -43,11 +42,6 @@ class World {
   }
 
   async init() {
-    // const { parrot } = await loadBirds();
-    // controls.target.copy(parrot.position);
-    // loop.updatables.push(parrot);
-    // scene.add(parrot);
-    
     const { flows, lines } = await loadTexts();
     for (let i in flows) {
       scene.add(flows[i].object3D);

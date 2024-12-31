@@ -5,7 +5,7 @@ async function loadHead() {
   const loader = new GLTFLoader();
 
   const [objData,] = await Promise.all([
-    loader.loadAsync('/assets/models/black_vase/head.glb'),
+    loader.loadAsync('/assets/models/head/head.glb'),
   ]);
 
   console.log(objData);
