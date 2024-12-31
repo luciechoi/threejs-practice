@@ -8,7 +8,14 @@ import { Flow } from 'three/addons/modifiers/CurveModifier.js';
 let textString1 = 'When something is important enough, you do it even if the odds are not in your favor.';
 let textString2 = '오직 한없이 가지고 싶은 것은 높은 문화의 힘이다. 문화의 힘은 우리 자신을 행복하게 하고, 나아가서 남에게 행복을 주기 때문이다.';
 let textString3 = 'The meaning of life is to find your gift. The purpose of life is to give it away.';
-let textString4 = '안\n녕\n하\n세\n요\r';
+let textString4 = 'A well-designed life is a life that makes sense. It\'s a life in which who you are, what you believe and what you do all line up together.'
+
+// let textString4 = ''
+// for (let i = 0; i < verticalText.length; i++) {
+//     const char = verticalText[i];
+//     textString4 = textString4.concat(char, '\n')
+// }
+// console.log(textString4)
 
 let textConfigs = [
     {
@@ -43,14 +50,24 @@ let textConfigs = [
     },
     {
         text: textString4,
-        textSize: 0.03,
+        textSize: 0.02,
         name: "string4",
-        textRotationAngles: [0, 0, -Math.PI/2],
-        curveScale: 0.6,
+        textRotationAngles: [0, 0, 0],
+        curveScale: 0.4,
         curveSpeed: -0.0005,
         curveRotationAxis: new THREE.Vector3(0, 0, 1),
-        curveRotationAngle: Math.PI/2,
+        curveRotationAngle: -Math.PI/2,
     },
+    // {
+    //     text: verticalText,
+    //     textSize: 0.03,
+    //     name: "string4",
+    //     textRotationAngles: [0, 0, -Math.PI/2],
+    //     curveScale: 0.6,
+    //     curveSpeed: -0.0005,
+    //     curveRotationAxis: new THREE.Vector3(0, 0, 1),
+    //     curveRotationAngle: Math.PI/2,
+    // },
 ];
 
 async function loadFont() {

@@ -18,8 +18,8 @@ let loop;
 
 /** TODO
  * - Add debug ui
- * - Add bounding box ui
- * - Add curvature to the text
+ * - Replace the parrot model
+ * - Make the curvature smooth
  */
 class World {
   constructor(container) {
