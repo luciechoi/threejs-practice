@@ -12,8 +12,8 @@ async function loadBirds() {
   console.log('Squaaawk!', parrotData);
 
   const parrot = setupModel(parrotData);
-  parrot.position.set(0, 0, 2.5);
-  parrot.scale.set(0.1, -0.1, 0.1);
+  parrot.position.set(0, 0, 0);
+  parrot.scale.set(0.1, 0.1, 0.1);
 
   return {
     parrot,
