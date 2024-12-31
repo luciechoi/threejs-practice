@@ -9,6 +9,7 @@ import { createRenderer } from './systems/renderer.js';
 import { Resizer } from './systems/Resizer.js';
 import { Loop } from './systems/Loop.js';
 import { loadTexts } from './components/texts/texts.js';
+import { loadHead } from './components/head/head.js';
 
 let camera;
 let controls;
@@ -42,20 +43,24 @@ class World {
   }
 
   async init() {
-    const { parrot } = await loadBirds();
+    // const { parrot } = await loadBirds();
+    // controls.target.copy(parrot.position);
+    // loop.updatables.push(parrot);
+    // scene.add(parrot);
+    
     const { flows, lines } = await loadTexts();
-
-    controls.target.copy(parrot.position);
-    loop.updatables.push(parrot);
-    scene.add(parrot);
-
     for (let i in flows) {
       scene.add(flows[i].object3D);
       loop.updatables.push(flows[i]);
     }
     for (let i in lines) {
-      scene.add(lines[i]);
+      // scene.add(lines[i]);
     }
+    
+    const { head } = await loadHead();
+    scene.add(head);
+    controls.target.copy(head.position);
+    loop.updatables.push(head);
   }
 
   render() {

@@ -2,20 +2,20 @@ import * as THREE from 'three'
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js'
 import typefaceFont from 'three/examples/fonts/helvetiker_regular.typeface.json'
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js'
-import { setupAnimation } from './setupAnimation';
 import { Flow } from 'three/addons/modifiers/CurveModifier.js';
 
 let textString1 = 'When something is important enough, you do it even if the odds are not in your favor.';
 let textString2 = '오직 한없이 가지고 싶은 것은 높은 문화의 힘이다. 문화의 힘은 우리 자신을 행복하게 하고, 나아가서 남에게 행복을 주기 때문이다.';
 let textString3 = 'The meaning of life is to find your gift. The purpose of life is to give it away.';
 let textString4 = 'A well-designed life is a life that makes sense. It\'s a life in which who you are, what you believe and what you do all line up together.'
+let textString5 = '모든 분야에서 아마추어는 수비적이고 프로는 공격적입니다';
 
-// let textString4 = ''
-// for (let i = 0; i < verticalText.length; i++) {
-//     const char = verticalText[i];
-//     textString4 = textString4.concat(char, '\n')
+// let verticalText = ''
+// for (let i = 0; i < textString5.length; i++) {
+//     const char = textString5[i];
+//     verticalText = verticalText.concat(char, '\n')
 // }
-// console.log(textString4)
+
 
 let textConfigs = [
     {
@@ -58,15 +58,25 @@ let textConfigs = [
         curveRotationAxis: new THREE.Vector3(0, 0, 1),
         curveRotationAngle: -Math.PI/2,
     },
+    {
+        text: textString5,
+        textSize: 0.02,
+        name: "string5",
+        textRotationAngles: [0, 0, 0],
+        curveScale: 0.3,
+        curveSpeed: 0.002,
+        curveRotationAxis: new THREE.Vector3(1, 0, 0),
+        curveRotationAngle: Math.PI/2,
+    },
     // {
     //     text: verticalText,
     //     textSize: 0.03,
-    //     name: "string4",
+    //     name: "vertical text",
     //     textRotationAngles: [0, 0, -Math.PI/2],
     //     curveScale: 0.6,
     //     curveSpeed: -0.0005,
-    //     curveRotationAxis: new THREE.Vector3(0, 0, 1),
-    //     curveRotationAngle: Math.PI/2,
+    //     curveRotationAxis: new THREE.Vector3(1, 0, 0),
+    //     curveRotationAngle: -Math.PI/2,
     // },
 ];
 
