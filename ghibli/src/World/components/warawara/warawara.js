@@ -17,6 +17,13 @@ async function loadWarawara() {
   warawara.scale.set(0.3, 0.3, 0.3);
   warawara.rotation.set(0, Math.PI, 0);
 
+  warawara.traverse(function(node) {
+    if (node.isMesh) {
+      node.castShadow = true;
+      node.receiveShadow = true;
+    }
+  });
+
   return {
     warawara,
   };
