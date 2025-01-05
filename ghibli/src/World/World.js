@@ -7,12 +7,15 @@ import { createControls } from './systems/controls.js';
 import { createRenderer } from './systems/renderer.js';
 import { Resizer } from './systems/Resizer.js';
 import { Loop } from './systems/Loop.js';
+import { AmmoPhysics } from 'three/addons/physics/AmmoPhysics.js';
+import { loadEnvironments } from './components/environment/environment.js';
 
 let camera;
 let controls;
 let renderer;
 let scene;
 let loop;
+let physics;
 
 class World {
   constructor(container) {
@@ -23,15 +26,19 @@ class World {
     container.append(renderer.domElement);
     controls = createControls(camera, renderer.domElement);
 
-    const { ambientLight, mainLight } = createLights();
+    const { mainLight } = createLights();
 
     loop.updatables.push(controls);
-    scene.add(ambientLight, mainLight);
+    scene.add( mainLight);
 
     const resizer = new Resizer(container, camera, renderer);
   }
 
   async init() {
+    physics = await AmmoPhysics();
+    const { floor } = loadEnvironments();
+    scene.add(floor);
+
     const { warawara } = await loadWarawara();
 
     // move the target to the center of the front bird
@@ -41,6 +48,8 @@ class World {
       loop.updatables.push(warawara);
     }
     scene.add(warawara);
+
+    console.log("scene", scene);
   }
 
   render() {

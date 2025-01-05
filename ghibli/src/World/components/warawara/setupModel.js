@@ -2,6 +2,9 @@ import { AnimationMixer } from 'three';
 
 function setupModel(data) {
   const model = data.scene.children[0];
+  model.castShadow = true;
+  model.receieveShadow = true;
+  model.userData.physics = { mass: 1 };
 
   if (data.animations.length > 0) {
     console.log('Adding animation')
