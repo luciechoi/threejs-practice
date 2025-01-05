@@ -13,9 +13,11 @@ async function loadWarawara() {
   console.log('Wara wara!', warawaraData);
 
   const warawara = setupModel(warawaraData);
-  warawara.position.set(0, 0, 0);
+  warawara.position.set(Math.random(0, 2), -0.08, Math.random(0, 2));
   warawara.scale.set(0.3, 0.3, 0.3);
-  warawara.rotation.set(0, Math.PI, 0);
+  const rotation = Math.PI + Math.random(-0.5, 0.5);
+  warawara.rotation.set(0, rotation, 0);
+  warawara.userData.physics = { mass: 1 };
 
   warawara.traverse(function(node) {
     if (node.isMesh) {
@@ -24,9 +26,7 @@ async function loadWarawara() {
     }
   });
 
-  return {
-    warawara,
-  };
+  return warawara;
 }
 
 export { loadWarawara };

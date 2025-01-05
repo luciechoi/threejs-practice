@@ -2,9 +2,9 @@ import * as THREE from 'three';
 
 function loadEnvironments() {
     const floor = new THREE.Mesh(
-        new THREE.PlaneGeometry(5, 5, 10, 10),
+        new THREE.PlaneGeometry(10, 10, 10, 10),
         new THREE.MeshPhongMaterial({
-                color: 0x808080,
+                color: 0x1C311A,
                 side: THREE.DoubleSide,
             }),
     );
