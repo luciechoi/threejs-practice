@@ -1,6 +1,6 @@
 # Voices floating around my head, 2024
 
-![result](https://github.com/luciechoi/threejs-practice/blob/main/text-geometry/result.gif)
+![result](https://github.com/luciechoi/threejs-practice/blob/master/text-geometry/result.gif)
 
 ## Description
 The texts in the scene are some powerful words that have influenced me significantly in 2024. These quotes by famous people have lingered in my mind, floating in my head and continuously unlocking new perspectives.
