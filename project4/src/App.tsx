@@ -1,15 +1,15 @@
 import './App.css';
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import KernelPage from "./pages/Kernel";
-import RasterizationPage from "./pages/Rasterization";
+import TextureMappingPage from "./pages/TextureMapping";
 
 function App() {
   return (
     <>
     <Router>
         <Routes>
-          <Route path="/" element={<KernelPage />} />
-          <Route path="/rasterization" element={<RasterizationPage />} />
+          <Route path="/kernel" element={<KernelPage />} />
+          <Route path="/texturemapping" element={<TextureMappingPage />} />
         </Routes>
       </Router>
     </>

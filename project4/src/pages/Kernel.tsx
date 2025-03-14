@@ -133,7 +133,7 @@ export default function KernelPage() {
 const getMarkdown = (kernelType = 'original') =>  {
   if (kernelType == 'sobel edge detection') {
     const gx = getMatrixMarkdown(kernels['sobel horizontal']['kernel']);
-    const gy = getMatrixMarkdown(kernels['sobel horizontal']['kernel']);
+    const gy = getMatrixMarkdown(kernels['sobel vertical']['kernel']);
     const markdown = `\\(\\sqrt{ (${gx} \\times I )^2 + (${gy} \\times I )^2 } \\)`;
     return markdown;
   }

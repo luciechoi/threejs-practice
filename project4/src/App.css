@@ -27,6 +27,20 @@ body,
   vertical-align: middle;
 }
 
+.section {
+  display: inline;
+  color: black;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.section:hover {
+  color: #646CFF;
+}
+#selected {
+  color: #646CFF;
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;
