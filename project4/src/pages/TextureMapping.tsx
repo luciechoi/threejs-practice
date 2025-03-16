@@ -1,12 +1,17 @@
 import '../App.css';
 import { useState, useRef, useMemo, useEffect } from 'react'
 import { Canvas, useLoader, invalidate, useThree, useFrame } from '@react-three/fiber'
-import { OrbitControls } from '@react-three/drei'
+import { Environment, OrbitControls } from '@react-three/drei'
 import VertexShader from '../assets/shaders/rasterization/vertex.glsl?raw'
 import FragmentShader from '../assets/shaders/rasterization/fragment.glsl?raw'
 import catHigh from '../assets/images/cat-walk-high.jpg'
 import catLow from '../assets/images/cat-walk-low.jpg'
 import checkerBoard from '../assets/images/checkerboard.png'
+import colorMap from '../assets/textures/COL_1K_METALNESS.png'
+import roughnessMap from '../assets/textures/ROUGHNESS_1K_METALNESS.png'
+import displacementMap from '../assets/textures/DISP16_1K_METALNESS.png'
+import ambientOcclusionMap from '../assets/textures/AO_1K_METALNESS.png'
+import normalMap from '../assets/textures/NRM_1K_METALNESS.png'
 import { 
     TextureLoader, Uniform, Vector2, SRGBColorSpace, NearestFilter,
     LinearFilter, LinearMipmapLinearFilter, RepeatWrapping,
@@ -56,20 +61,27 @@ const MagnificationImage = ({interpolationType = 'Nearest'}) => {
 function TextureMagnification() {
     const interpolationOption
     = useControls( { interpolation: { value: 'Nearest', options: interpolationOptions } });
+    const [collapsed, setCollapsed] = useState(true)
+        useEffect(() => {
+        const timeoutId = setTimeout(() => { setCollapsed(false) }, 0)
+        return () => clearTimeout(timeoutId)
+        }, [])
     return (
         <>  
             <div className="header-div" style={{ marginTop: '20px' }}>
                 original image:<br/>
                 <img src={catLow} alt="cat low res" />
             </div>
-            <div className="canvas-div" style={{ marginTop: '100px' }}>
-                <div style={{width: 300, position:"absolute", right:0, top:0, zIndex: 100}}>
-                    <Leva fill/>
+            <div className="canvas-container">
+                <div className="canvas-div" >
+                    <Canvas>
+                        <MagnificationImage interpolationType={interpolationOption.interpolation} />
+                        <OrbitControls />
+                    </Canvas>
                 </div>
-                <Canvas>
-                    <MagnificationImage interpolationType={interpolationOption.interpolation} />
-                    <OrbitControls />
-                </Canvas>
+                <div className="leva-container">
+                    <Leva fill collapsed={{collapsed, onChange: (value) => { setCollapsed(value) },}}/>
+                </div>
             </div>
         </>
     )
@@ -111,19 +123,29 @@ const MinificationImage = ({filterType = 'Nearest'}) => {
 function TextureMinification() {
     const filterOption
         = useControls( { filter: { value: 'Nearest', options: filterOptions } });
+    
+    const [collapsed, setCollapsed] = useState(true)
+        useEffect(() => {
+          const timeoutId = setTimeout(() => { setCollapsed(false) }, 0)
+          return () => clearTimeout(timeoutId)
+        }, [])
     return (
         <>  
+            <div className="canvas-container">
+                <div className="canvas-div">
+                    <Canvas gl={{antialias: false}}>
+                        <MinificationImage filterType={filterOption.filter}/>
+                        <OrbitControls />
+                    </Canvas>
+                </div>
+                <div className="leva-container">
+                    <Leva fill collapsed={{collapsed, onChange: (value) => { setCollapsed(value) },}}/>
+                </div>
+            </div>
             <div className="header-div" style={{ marginTop: '20px' }}>
                 {/* <h2>Texture Minification</h2> */}
                 original image:<br/>
                 <img src={catHigh} alt="cat high res" />
-            </div>
-            <div className="canvas-div" style={{ marginTop: '120px' }}>
-                <Leva/>
-                <Canvas gl={{antialias: false}}>
-                    <MinificationImage filterType={filterOption.filter}/>
-                    <OrbitControls />
-                </Canvas>
             </div>
         </>
     )
@@ -178,52 +200,99 @@ function AnisotropicImage() {
 }
 
 function Anisotropic() {
+    const [collapsed, setCollapsed] = useState(true)
+        useEffect(() => {
+        const timeoutId = setTimeout(() => { setCollapsed(false) }, 0)
+        return () => clearTimeout(timeoutId)
+        }, [])
     return (
         <>  
             <div className="header-div" style={{ marginTop: '20px' }}>
-                original image:<br/>
+                texture:<br/>
                 <img src={checkerBoard} alt="checkerboard" />
             </div>
-            <div className="canvas-div" style={{ marginTop: '120px' }}>
-                <Leva />
-                <Canvas >
-                    <AnisotropicImage/>
-                    <OrbitControls />
-                </Canvas>
+            <div className="canvas-container">
+                <div className="canvas-div" >
+                    <Canvas >
+                        <AnisotropicImage/>
+                        <OrbitControls />
+                    </Canvas>
+                </div>
+                <div className="leva-container">
+                    <Leva fill collapsed={{collapsed, onChange: (value) => { setCollapsed(value) },}} />
+                </div>
             </div>
         </>
     )
 }
 
 function MappingScene() {
+    const colorTx = useLoader(TextureLoader, colorMap);
+    const displacementTx = useLoader(TextureLoader, displacementMap);
+    const roughnessTx = useLoader(TextureLoader, roughnessMap);
+    const ambientOcclusionTx = useLoader(TextureLoader, ambientOcclusionMap);
+    const normalTx = useLoader(TextureLoader, normalMap);
+
     return (
-        <mesh>
-            <sphereGeometry />
-            <meshBasicMaterial />
-        </mesh>
+        <>  
+            {/* <ambientLight /> */}
+            <directionalLight position={[0, 20, -150]}  castShadow />
+            <mesh position={[0, 1, -100]} castShadow>
+                <sphereGeometry args={[20, 100, 100]}/>
+                <meshStandardMaterial
+                    map={colorTx}
+                    roughnessMap={roughnessTx}
+                    roughness={0.5}
+                    displacementMap={displacementTx}
+                    aoMap={ambientOcclusionTx}
+                    aoMapIntensity={1}
+                    normalMap={normalTx}
+                    normalScale={new Vector2(5, 5)}
+                />
+            </mesh>
+            <mesh position={[0, -30, -100]} rotation={[-1.5, 0, 0]} receiveShadow>
+                <planeGeometry args={[100, 100]}/>
+                <meshPhongMaterial color={'white'} />
+            </mesh>
+        </>
     )
 }
 
-function Mapping() {
-    const mapTypes
+function Textures() {
+    const textureTypes
         = useControls( {
-            textureMap: { value: false },
-            normalMap: { value: false },
+            colorMap: { value: true },
             displacementMap: { value: false },
+            normalMap: { value: false },
+            roughnessMap: { value: false },
+            ambeintOcclusionMap: {value: false},
             environmentMap: { value: false },
         });
+    const [collapsed, setCollapsed] = useState(true)
+        useEffect(() => {
+          const timeoutId = setTimeout(() => { setCollapsed(false) }, 0)
+          return () => clearTimeout(timeoutId)
+        }, [])
+
     return (
         <>  
             <div className="header-div" style={{ marginTop: '20px' }}>
-                original image:<br/>
-                <img src={checkerBoard} alt="checkerboard" />
+                textures:
             </div>
-            <div className="canvas-div" style={{ marginTop: '120px' }}>
-                <Leva theme={{ sizes: { rootWidth: "200px", controlWidth: '30px'  } }} />;
-                <Canvas >
-                    <MappingScene/>
-                    <OrbitControls />
-                </Canvas>
+            <div className="canvas-container">
+                <div className="canvas-div">
+                    <Canvas shadows>
+                        <MappingScene/>
+                        <Environment preset="forest" background />
+                        <OrbitControls />
+                    </Canvas>
+                </div>
+                <div className="leva-container">
+                    <Leva fill
+                        theme={{ sizes: { rootWidth: "200px", controlWidth: '30px' } }}
+                        collapsed={{collapsed, onChange: (value) => { setCollapsed(value) },}}
+                    />
+                </div>
             </div>
         </>
     )
@@ -241,8 +310,8 @@ function SubPage() {
         case ('#anisotropic'): {
             return <Anisotropic/>;
         }
-        case ('#mapping'): {
-            return <Mapping/>;
+        case ('#textures'): {
+            return <Textures/>;
         }
         default: {
             return <TextureMagnification/>;
@@ -258,7 +327,7 @@ function getSectionIdTag(pageName) {
     return ''
 }
 
-const hrefs = ["#magnification", "#minification", "#anisotropic", "#mapping"];
+const hrefs = ["#magnification", "#minification", "#anisotropic", "#textures"];
 
 export default function TextureMappingPage() {
     const section = useLocation().hash;
@@ -266,6 +335,7 @@ export default function TextureMappingPage() {
         window.location.href = hrefs[0];
         location.reload();
     }
+
     return (
         <>
             <div className="title-div">
@@ -276,7 +346,7 @@ export default function TextureMappingPage() {
                 <h2 className='section'>|</h2>
                 <a href="#anisotropic"><h2 className='section' id={getSectionIdTag("#anisotropic")}>Anisotropic</h2></a>
                 <h2 className='section'>|</h2>
-                <a href="#mapping"><h2 className='section' id={getSectionIdTag("#mapping")}>Mapping</h2></a>
+                <a href="#textures"><h2 className='section' id={getSectionIdTag("#textures")}>Textures</h2></a>
             </div>
             <SubPage />
         </>

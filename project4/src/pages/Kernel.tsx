@@ -104,6 +104,14 @@ const Image = ({kernelType = 'original'}) => {
   )
 };
 
+const FrequencyImage = () => {
+  return (
+    <mesh>
+      
+    </mesh>
+  )
+};
+
 export default function KernelPage() {
   const kernelOption
     = useControls( { kernel: { value: 'original', options: kernelOptions } });
