@@ -1,8 +1,10 @@
 import { useState, useRef, useMemo, useEffect } from 'react'
 import { Canvas, useLoader, invalidate } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
-import VertexShader from '../assets/shaders/kernel/vertex.glsl?raw'
-import FragmentShader from '../assets/shaders/kernel/fragment.glsl?raw'
+import KernelVertexShader from '../assets/shaders/kernel/vertex.glsl?raw'
+import KernelFragmentShader from '../assets/shaders/kernel/fragment.glsl?raw'
+import FrequencyVertexShader from '../assets/shaders/frequency/vertex.glsl?raw'
+import FrequencyFragmentShader from '../assets/shaders/frequency/fragment.glsl?raw'
 import '../App.css'
 import { TextureLoader, Uniform, Vector2 } from 'three'
 import { Leva, useControls } from 'leva'
@@ -62,10 +64,7 @@ const kernels = {
   },
 };
 
-// TODO:
-// 1. Change picture
-// 2. Show Frequency domain
-const Image = ({kernelType = 'original'}) => {
+const KernelImage = ({kernelType = 'original'}) => {
   const tx = useLoader(TextureLoader, image1);
   const uniforms = useRef();
   uniforms.current ??= {
@@ -96,18 +95,28 @@ const Image = ({kernelType = 'original'}) => {
     <mesh>
       <planeGeometry args={[5, 5]}/>
       <shaderMaterial
-        vertexShader={VertexShader}
-        fragmentShader= {FragmentShader}
+        vertexShader={KernelVertexShader}
+        fragmentShader= {KernelFragmentShader}
         uniforms={uniforms.current}
       />
     </mesh>
   )
 };
 
-const FrequencyImage = () => {
+const FrequencyDomainImage = () => {
+  const tx = useLoader(TextureLoader, image1);
+  console.log("image size: " , tx.image.width, tx.image.height);
   return (
     <mesh>
-      
+      <planeGeometry args={[5, 5]}/>
+      <shaderMaterial
+        vertexShader={FrequencyVertexShader}
+        fragmentShader= {FrequencyFragmentShader}
+        uniforms={{
+          u_texture: { value: tx },
+          u_resolution: { value: new Vector2(tx.image.width, tx.image.height)}
+        }}
+      />
     </mesh>
   )
 };
@@ -126,12 +135,17 @@ export default function KernelPage() {
             {getMarkdown(kernelOption.kernel)}
           </MathJax>
         </div>
-        <div className="canvas-div">
-          <Leva />
-          <Canvas>
-            <Image kernelType={kernelOption.kernel}/>
-            <OrbitControls />
-          </Canvas>
+        <div className='canvas-container'>
+          <div className="canvas-div">
+            <Canvas>
+              {/* <KernelImage kernelType={kernelOption.kernel}/> */}
+              <FrequencyDomainImage />
+              <OrbitControls />
+            </Canvas>
+          </div>
+          <div className='leva-container'>
+            <Leva fill />
+          </div>
         </div>
       </MathJaxContext>
     </>
